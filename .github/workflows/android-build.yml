@@ -24,16 +24,21 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
 
-    - name: Create .env file
+    # यह स्टेप .env और local.properties दोनों में नकली API Key डाल देगा ताकि कंपाइल एरर न आए
+    - name: Create Environment Files
       run: |
-        echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env
+        echo "GEMINI_API_KEY=\"dummy_api_key_for_building\"" > .env
+        echo "GEMINI_API_KEY=dummy_api_key_for_building" > local.properties
 
-    # यह स्टेप एरर को रोकने के लिए एक नकली debug.keystore बना देगा
+    # यह स्टेप एरर को रोकने के लिए डिबग कीस्टोर बनाएगा
     - name: Generate Fake Debug Keystore
       run: |
         keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 
+    # यहाँ हमने पर्यावरण वेरिएबल (env) में भी की पास कर दी है
     - name: Build Debug APK
+      env:
+        GEMINI_API_KEY: "dummy_api_key_for_building"
       run: gradle assembleDebug
 
     - name: Upload APK Artifact
