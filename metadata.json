@@ -1,0 +1,6 @@
+{
+  "name": "Nexus APK Builder",
+  "description": "On-device Android APK compiler and web-wrapper builder.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
