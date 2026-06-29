@@ -21,7 +21,6 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    # यह एक्शन बिना gradlew फ़ाइल के भी gradle रन कर देगा
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v4
 
@@ -29,9 +28,8 @@ jobs:
       run: |
         echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env
 
-    # यहाँ हमने ./gradlew की जगह सीधे gradle का उपयोग किया है
     - name: Build Debug APK
-      run: gradle assembleDebug
+      run: gradle assembleDebug -Pandroid.injected.signing.store.file=""
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
