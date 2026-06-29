@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch: # इससे आप मैन्युअली भी रन कर सकते हैं
+  workflow_dispatch:
 
 jobs:
   build:
@@ -20,21 +20,21 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: gradle
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
+    # यह एक्शन बिना gradlew फ़ाइल के भी gradle रन कर देगा
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
 
-    # आपके प्रोजेक्ट की README के अनुसार .env फ़ाइल की जरूरत है
     - name: Create .env file
       run: |
         echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > .env
 
+    # यहाँ हमने ./gradlew की जगह सीधे gradle का उपयोग किया है
     - name: Build Debug APK
-      run: ./gradlew assembleDebug
+      run: gradle assembleDebug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: app-debug-apk
-        path: app/build/outputs/apk/debug/app-debug. Bahut badhiya! Aapka workflow ready hai.
+        path: app/build/outputs/apk/debug/app-debug.apk
